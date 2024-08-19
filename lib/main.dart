@@ -17,10 +17,10 @@ void main() async {
   Platform.isAndroid ?
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: 'AIzaSyBdPg5TrTAEVLMLsX6lcoE2L0M3G3weOHA',
-      appId: 'com.example.test_one', 
-      messagingSenderId: '546201027083', 
-      projectId: 'todo-app-fb031')
+      apiKey: 'AIzaSyCZ4I10wfUEaNVAizqlE8ihOepWuNr1uDY',
+      appId: '1:253272837650:android:1b2aabcbe3b280dff2d2cb',
+      messagingSenderId: '253272837650',
+      projectId: 'todo-ad680')
     
   ):
    await Firebase.initializeApp();

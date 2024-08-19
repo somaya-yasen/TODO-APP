@@ -3,13 +3,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_one/app_theme.dart';
 import 'package:test_one/auth/text_form_field.dart';
+import 'package:test_one/dialog_show.dart';
 
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   static const String routeName = 'registerـscreen';
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController nameController = TextEditingController();
+
   TextEditingController emailController = TextEditingController();
+
   TextEditingController passwordController = TextEditingController();
+
   TextEditingController confirmPasswordController = TextEditingController();
+
   var formKey = GlobalKey<FormState>();
 
   @override
@@ -119,21 +130,33 @@ class RegisterScreen extends StatelessWidget {
     if(
     formKey.currentState?.validate() == true) {
       // register
+      //todo: show loading
+      DialogUtils.showLoading(context: context, message: 'loading...');
 
       try {
         final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text,
           password: passwordController.text,
         );
+        // todo:hide loading
+        // show message for user
         print(credential.user?.uid??"");
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           print('The password provided is too weak.');
+          // todo:hide loading
+          // show message for user
         } else if (e.code == 'email-already-in-use') {
           print('The account already exists for that email.');
+          //todo: hide loading
+          // show message for user
         }
       } catch (e) {
+        // todo:hide loading
+        // show message for user
+
         print(e);
+
       }
 
     }
