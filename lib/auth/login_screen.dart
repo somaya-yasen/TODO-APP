@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:test_one/app_theme.dart';
 import 'package:test_one/auth/register_screen.dart';
 import 'package:test_one/auth/text_form_field.dart';
+import 'package:test_one/dialog_show.dart';
+
+import '../home_screen.dart';
 
 class LoginSreen extends StatelessWidget {
   static const String routeName = 'login_screen';
@@ -84,7 +87,7 @@ class LoginSreen extends StatelessWidget {
                         padding: const EdgeInsets.all(10.0),
                         child: ElevatedButton(
                             onPressed: () {
-                              login();
+                              login(context);
                             },
                             child: Text('Login')),
                       ),
@@ -104,23 +107,40 @@ class LoginSreen extends StatelessWidget {
     );
   }
 
-  void login() async {
+  void login(BuildContext context) async {
     if (formKey.currentState?.validate() == true) {
         // login
+      //show loading
+      DialogUtils.showLoading(context: context, message: 'loading...');
 
         try {
           final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: emailController.text,
             password: passwordController.text,
           );
-          print(credential.user?.uid??"");
-        } on FirebaseAuthException catch (e) {
+          DialogUtils.hideLoading(context: context);
+          DialogUtils.showMessage(context: context, message: 'login success',
+              title: 'success',
+              posActionName: 'ok',
+              posAction: (){
+                Navigator.of(context).pushNamed(HomeScreen.routeName);
+              }
+          );
+          print(credential.user?.uid??" ");
+        }
+        on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') {
+            DialogUtils.hideLoading(context: context);
+            DialogUtils.showMessage(context: context, message: 'No user found for that email.');
             print('No user found for that email.');
           } else if (e.code == 'wrong-password') {
+            DialogUtils.hideLoading(context: context);
+            DialogUtils.showMessage(context: context, message: 'No user found for that email.');
             print('Wrong password provided for that user.');
           }
         } catch (e) {
+          DialogUtils.hideLoading(context: context);
+          DialogUtils.showMessage(context: context, message: e.toString());
           print(e);
         }
 

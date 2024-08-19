@@ -50,7 +50,8 @@ class DialogUtils{
               message
             ),
             title: Text(
-              title
+              title,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             actions: [
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:test_one/app_theme.dart';
 import 'package:test_one/auth/text_form_field.dart';
 import 'package:test_one/dialog_show.dart';
+import 'package:test_one/home_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String routeName = 'registerـscreen';
@@ -138,15 +139,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
           email: emailController.text,
           password: passwordController.text,
         );
+        DialogUtils.hideLoading(context: context);
+        DialogUtils.showMessage(context: context, message: 'register success', posActionName: 'ok',
+          title: 'success',
+          posAction: (){
+          Navigator.of(context).pushNamed(HomeScreen.routeName);
+          }
+        );
+
         // todo:hide loading
-        // show message for user
         print(credential.user?.uid??"");
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
+          DialogUtils.hideLoading(context: context);
+          DialogUtils.showMessage(context: context, message: 'The password provided is too weak.');
           print('The password provided is too weak.');
           // todo:hide loading
           // show message for user
         } else if (e.code == 'email-already-in-use') {
+          DialogUtils.hideLoading(context: context);
+          DialogUtils.showMessage(context: context, message: 'The account already exists for that email.', title: 'Error');
           print('The account already exists for that email.');
           //todo: hide loading
           // show message for user
@@ -154,8 +166,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } catch (e) {
         // todo:hide loading
         // show message for user
-
-        print(e);
+        DialogUtils.hideLoading(context: context);
+        DialogUtils.showMessage(context: context, message: e.toString(), title: 'Error');
+        print(e.toString());
 
       }
 
